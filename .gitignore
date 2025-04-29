@@ -19,4 +19,10 @@ yarn-error.log*
 # VSCode settings
 .vscode/
 
-public/assets/3D/whitebglaptop.glb
+# .gitignore
+*.glb
+*.psd
+*.mp4
+*.zip
+node_modules/
+.next/
