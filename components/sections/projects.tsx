@@ -142,7 +142,7 @@ const projects = [
   },
   {
     id: 8,
-    title: "Movie Discovery App",
+    title: "Music Player App",
     description:
       "This Music Player is a fully responsive, feature-rich audio interface that I built from static design to full interactivity using modern React tooling and TypeScript. I translated a Figma design into custom Tailwind-styled components, implemented responsive layouts and dark mode support, and configured a personalized design system with custom colors, themes, and animations. From there, I architected the component logic using React hooks and centralized state, managing playback, shuffle, speed, volume, and song switching using real-time data fetched from an external API. Each component was written in TypeScript with strict prop typing, and the app features hoverable lyrics, a real-time playlist with dynamic selection, and an embedded custom audio player powered by HTML audio elements. I wrote snapshot tests, interaction tests, and API mocks using Vitest, React Testing Library, and MSW, achieving high test coverage. I also set up continuous integration with GitHub Actions to automate testing and coverage reporting on each commit. The project is deployed to Netlify and performs consistently across screen sizes and system color preferences.",
     image: "music-player.png",
@@ -159,6 +159,29 @@ const projects = [
     liveUrl: "https://atlas-music-player-aperry.netlify.app/",
     githubUrl: "https://github.com/abrielleperry/atlas-music-player",
     category: "fullstack",
+  },
+  {
+    id: 9,
+    title: "Files Manager",
+    description:
+      "Atlas Files Manager is a full back-end application that replicates the core functionality of a file hosting service. I built a robust RESTful API using Node.js and Express that handles user authentication, file uploads, permission management, background job processing, and dynamic file serving. Authentication is handled through token-based security, with Redis used for efficient session storage and expiration. I developed endpoints for uploading, listing, and viewing files, along with controlling public or private access permissions. MongoDB was used for persistent storage of users and files, and Redis provided fast in-memory management of authentication tokens and background job queues. For image uploads, I implemented a background worker using Bull that automatically generated multiple thumbnail sizes, offloading intensive processing tasks from the main API thread. I also created features for paginated file listings, dynamic folder structures, and direct file retrieval with MIME-type handling. This project showcases my ability to integrate databases, authentication systems, file storage, background processing, and scalable RESTful architecture into a cohesive and production-ready back-end service.",
+    image: "files-manager.png",
+    tags: [
+      "Node.js",
+      "Express",
+      "MongoDB",
+      "Redis",
+      "Bull",
+      "UUID",
+      "SHA1",
+      "MIME-Types",
+      "Image Thumbnail",
+      "Mocha",
+      "JavaScript",
+    ],
+    liveUrl: "https://abrielleperry.github.io/atlas-atlas-files_manager/",
+    githubUrl: "https://github.com/abrielleperry/atlas-atlas-files_manager",
+    category: "backend",
   },
 ];
 
