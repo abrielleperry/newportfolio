@@ -18,3 +18,5 @@ yarn-error.log*
 
 # VSCode settings
 .vscode/
+
+public/assets/3D/whitebglaptop.glb
