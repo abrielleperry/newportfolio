@@ -20,7 +20,7 @@ yarn-error.log*
 .vscode/
 
 # .gitignore
-*.glb
+
 *.psd
 *.mp4
 *.zip
