@@ -1,14 +1,14 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { Download } from "lucide-react";
+import { Download, Phone, Mail } from "lucide-react";
 import SectionHeading from "@/components/section-heading";
 import TiltedCard from "@/components/tilted-card";
 
 export default function About() {
   return (
     <section id="about" className="py-20 bg-muted/50">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-">
         <SectionHeading title="About Me" subtitle="My background and journey" />
 
         <div className="grid md:grid-cols-2 gap-8 items-center mt-12">
@@ -46,13 +46,38 @@ export default function About() {
                     projects and drive measurable results for clients.
                   </p>
                   <p>
-                    When I'm not coding, you can find me [your
-                    hobbies/interests]. I believe these activities help me
+                    When I'm not coding, you can find me crafting, reading books
+                    on garden design, exploring graphic design trends, visiting
+                    art exhibits, creating in Adobe Illustrator, and dining at
+                    new places with friends. I believe these activities help me
                     maintain a creative mindset that I bring to my development
                     work.
                   </p>
                 </div>
-                <div className="mt-6">
+                <div className="mt-6 flex flex-wrap gap-2">
+                  <div className="flex space-x-2 flex-grow">
+                    <Button asChild variant="outline" size="sm">
+                      <Link href="tel:+19187285419">
+                        <Phone className="mr-1 h-4 w-4" /> 918-728-5419
+                      </Link>
+                    </Button>
+                    <Button
+                      asChild
+                      variant="outline"
+                      size="sm"
+                      className="truncate max-w-[180px] md:max-w-none"
+                    >
+                      <Link
+                        href="mailto:abrielleperry22@icloud.com"
+                        className="truncate"
+                      >
+                        <Mail className="mr-1 h-4 w-4 flex-shrink-0" />
+                        <span className="truncate">
+                          abrielleperry22@icloud.com
+                        </span>
+                      </Link>
+                    </Button>
+                  </div>
                   <Button asChild>
                     <Link
                       href="/resume.pdf"
@@ -72,7 +97,7 @@ export default function About() {
               <TiltedCard
                 imageSrc="/about-headshot.png"
                 altText="Your Name - Professional Headshot"
-                captionText="Fullstack Developer"
+                captionText="Abrielle Perry"
                 containerHeight="100%"
                 containerWidth="100%"
                 imageHeight="100%"
@@ -85,7 +110,7 @@ export default function About() {
                 overlayContent={
                   <div className="absolute bottom-4 left-0 right-0 text-center">
                     <div className="bg-primary/80 text-primary-foreground backdrop-blur-sm px-4 py-2 rounded-lg mx-4">
-                      <p className="font-medium">Your Name</p>
+                      <p className="font-medium">Abrielle Perry</p>
                       <p className="text-sm">Fullstack Developer</p>
                     </div>
                   </div>

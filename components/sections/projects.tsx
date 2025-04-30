@@ -66,7 +66,7 @@ const projects = [
     title: "Rippl.",
     description:
       "Rippl is a cross-platform mobile application built to connect users based on shared interests, promoting genuine community interactions beyond typical social networking apps. As a core front-end developer on this capstone project, I led the development of key user experiences, from onboarding and profile creation to swiping, event discovery, and real-time messaging. I built responsive and accessible UI components using React Native and Tailwind CSS, ensuring a seamless user experience across both iOS and Android devices. The project also involved integrating a Supabase backend for authentication, database management, and real-time data synchronization. I collaborated closely with the back-end team to connect the front end to our Databricks-powered recommendation engine, which utilized machine learning models and Pandas for interest-based content suggestions. Additionally, I integrated GetStream for real-time chat functionality, building an engaging messaging experience that allowed users to form connections instantly. Through Rippl, I demonstrated the ability to architect scalable front-end systems, connect complex APIs, implement authentication workflows, and optimize mobile performance. This project highlights my full-stack collaboration skills, mobile-first development expertise, and my passion for building apps that prioritize meaningful user experiences.",
-    image: "/clean-creative-portfolio.png",
+    image: "/rippl.png",
     tags: [
       "React Native",
       "TypeScript",
@@ -165,7 +165,7 @@ const projects = [
     title: "Files Manager",
     description:
       "Atlas Files Manager is a full back-end application that replicates the core functionality of a file hosting service. I built a robust RESTful API using Node.js and Express that handles user authentication, file uploads, permission management, background job processing, and dynamic file serving. Authentication is handled through token-based security, with Redis used for efficient session storage and expiration. I developed endpoints for uploading, listing, and viewing files, along with controlling public or private access permissions. MongoDB was used for persistent storage of users and files, and Redis provided fast in-memory management of authentication tokens and background job queues. For image uploads, I implemented a background worker using Bull that automatically generated multiple thumbnail sizes, offloading intensive processing tasks from the main API thread. I also created features for paginated file listings, dynamic folder structures, and direct file retrieval with MIME-type handling. This project showcases my ability to integrate databases, authentication systems, file storage, background processing, and scalable RESTful architecture into a cohesive and production-ready back-end service.",
-    image: "files-manager.png",
+    image: "files-manager.jpeg",
     tags: [
       "Node.js",
       "Express",
