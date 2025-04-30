@@ -2,8 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import Script from "next/script";
+import * as THREE from "three"; // ✅ Import Three.js from npm
 
-// Define a global type for the VANTA object
 declare global {
   interface Window {
     VANTA: {
@@ -24,8 +24,12 @@ export default function SectionVantaBackground({
   const [scriptsLoaded, setScriptsLoaded] = useState(false);
   const [vantaEffect, setVantaEffect] = useState<any>(null);
 
-  // Initialize Vanta effect after scripts are loaded
   useEffect(() => {
+    // ✅ Inject npm-installed THREE into global scope for Vanta
+    if (!window.THREE) {
+      window.THREE = THREE;
+    }
+
     if (scriptsLoaded && !vantaEffect && vantaRef.current && window.VANTA) {
       const effect = window.VANTA.FOG({
         el: vantaRef.current,
@@ -40,7 +44,7 @@ export default function SectionVantaBackground({
         lowlightColor: 0x06202b,
         baseColor: 0xffffff,
         blurFactor: 0.9,
-        speed: 2.5, // Adjusted speed
+        speed: 2.5,
         zoom: 0.3,
       });
 
@@ -54,17 +58,12 @@ export default function SectionVantaBackground({
 
   return (
     <>
-      {/* Load Three.js and Vanta.js from CDN */}
-      <Script
-        src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"
-        onLoad={() => console.log("Three.js loaded")}
-      />
+      {/* ✅ Load only Vanta.js, NOT Three.js */}
       <Script
         src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.fog.min.js"
         onLoad={() => setScriptsLoaded(true)}
       />
 
-      {/* Vanta background container */}
       <div ref={vantaRef} className={`absolute inset-0 -z-10 ${className}`} />
     </>
   );
