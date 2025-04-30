@@ -115,25 +115,6 @@ export default function Intro() {
         </div>
       </div>
 
-      {/* Scroll indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: isLoaded ? 1 : 0 }}
-        transition={{ duration: 1, delay: 1.2 }}
-        className="absolute bottom-10 left-1/2 transform -translate-x-1/2"
-      >
-        <Link href="#home">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="rounded-full animate-bounce"
-          >
-            <ArrowDown className="h-6 w-6" />
-            <span className="sr-only">Scroll Down</span>
-          </Button>
-        </Link>
-      </motion.div>
-
       {/* Decorative elements */}
       <motion.div
         initial={{ opacity: 0 }}

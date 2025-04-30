@@ -22,7 +22,7 @@ export default function Footer() {
 
           <div className="flex items-center space-x-4">
             <Link
-              href="https://github.com/yourusername"
+              href="https://github.com/abrielleperry"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="GitHub"
@@ -30,7 +30,7 @@ export default function Footer() {
               <Github className="h-5 w-5 text-muted-foreground hover:text-foreground transition-colors" />
             </Link>
             <Link
-              href="https://linkedin.com/in/yourusername"
+              href="https://linkedin.com/in/abriellerperry"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="LinkedIn"
@@ -38,7 +38,7 @@ export default function Footer() {
               <Linkedin className="h-5 w-5 text-muted-foreground hover:text-foreground transition-colors" />
             </Link>
 
-            <Link href="mailto:your.email@example.com" aria-label="Email">
+            <Link href="mailto:abrielleperry22@icloud.com" aria-label="Email">
               <Mail className="h-5 w-5 text-muted-foreground hover:text-foreground transition-colors" />
             </Link>
           </div>

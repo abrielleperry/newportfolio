@@ -3,92 +3,104 @@
 import SectionHeading from "@/components/section-heading";
 import SpotlightCard from "@/components/ui/spotlight-card";
 import {
-  TabletsIcon as Devices,
-  StoreIcon as Storage,
-  LinkIcon as DatasetLinked,
-  PiIcon as Api,
-  FastForwardIcon as Speed,
-  Brush,
-  TrendingUp,
+  LayoutTemplate,
+  Server,
+  Database,
+  Webhook,
+  Gauge,
+  Paintbrush,
+  BarChart,
   Shield,
+  Code,
+  Globe,
+  Smartphone,
+  Layers,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
-// Services data
+// Updated services data with more accurate icons
 const services = [
   {
     title: "Front-End Development",
     description:
       "I design and build responsive, visually appealing, and user-friendly interfaces that enhance engagement and accessibility. My focus is on delivering seamless experiences using modern frameworks and best practices.",
-    icon: "Devices",
+    icon: "LayoutTemplate",
   },
   {
     title: "Back-End Development",
     description:
       "I develop secure and scalable server-side architectures that ensure seamless data processing and system performance. From authentication to database management, I build efficient back-end solutions tailored to your needs.",
-    icon: "Storage",
+    icon: "Server",
   },
   {
     title: "Database Management",
     description:
       "I design and manage efficient databases to ensure secure, structured, and scalable data storage. Whether handling SQL or NoSQL databases, I optimize performance for seamless data retrieval and processing.",
-    icon: "DatasetLinked",
+    icon: "Database",
   },
   {
     title: "API Development & Integration",
     description:
       "I build and integrate APIs to connect applications and services seamlessly. Whether it's third-party API integration or developing custom RESTful or GraphQL APIs, I ensure smooth data communication and interoperability.",
-    icon: "Api",
+    icon: "Webhook",
   },
   {
     title: "Performance Optimization",
     description:
       "I optimize website and application performance by improving load times, reducing bottlenecks, and implementing best coding practices. My goal is to enhance speed, scalability, and overall efficiency.",
-    icon: "Speed",
+    icon: "Gauge",
   },
   {
     title: "UI/UX Design",
     description:
       "I craft visually compelling and intuitive user interfaces with a focus on accessibility and seamless interactions. My designs enhance engagement by prioritizing usability and modern design trends.",
-    icon: "Brush",
+    icon: "Paintbrush",
   },
   {
     title: "SEO & Web Analytics",
     description:
       "I optimize websites for search engines, improve visibility, and track user engagement through analytics. My approach enhances organic reach and ensures data-driven decision-making for better performance.",
-    icon: "TrendingUp",
+    icon: "BarChart",
   },
   {
     title: "Security Implementation",
     description:
       "I implement security best practices to protect applications from vulnerabilities, unauthorized access, and data breaches. My focus includes authentication, encryption, and compliance with industry security standards.",
-    icon: "Security",
+    icon: "Shield",
   },
 ];
 
-// Map icon names to components
+// Updated icon mapping function with more accurate icons
 const getIcon = (iconName: string) => {
   const iconProps = { className: "h-10 w-10 text-primary" };
 
   switch (iconName) {
-    case "Devices":
-      return <Devices {...iconProps} />;
-    case "Storage":
-      return <Storage {...iconProps} />;
-    case "DatasetLinked":
-      return <DatasetLinked {...iconProps} />;
-    case "Api":
-      return <Api {...iconProps} />;
-    case "Speed":
-      return <Speed {...iconProps} />;
-    case "Brush":
-      return <Brush {...iconProps} />;
-    case "TrendingUp":
-      return <TrendingUp {...iconProps} />;
-    case "Security":
+    case "LayoutTemplate":
+      return <LayoutTemplate {...iconProps} />;
+    case "Server":
+      return <Server {...iconProps} />;
+    case "Database":
+      return <Database {...iconProps} />;
+    case "Webhook":
+      return <Webhook {...iconProps} />;
+    case "Gauge":
+      return <Gauge {...iconProps} />;
+    case "Paintbrush":
+      return <Paintbrush {...iconProps} />;
+    case "BarChart":
+      return <BarChart {...iconProps} />;
+    case "Shield":
       return <Shield {...iconProps} />;
+    case "Code":
+      return <Code {...iconProps} />;
+    case "Globe":
+      return <Globe {...iconProps} />;
+    case "Smartphone":
+      return <Smartphone {...iconProps} />;
+    case "Layers":
+      return <Layers {...iconProps} />;
     default:
-      return <Devices {...iconProps} />;
+      return <Code {...iconProps} />;
   }
 };
 
