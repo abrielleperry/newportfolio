@@ -12,7 +12,7 @@ import BlurText from "@/components/BlurText";
 // Project images for the flying posters
 const projectImages = ["/pic1.jpg", "/pic2.jpg", "/pic3.jpg"];
 
-export default function Intro() {
+export default function Brut() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [animationComplete, setAnimationComplete] = useState(false);
   const animationCompletedRef = useRef(false);

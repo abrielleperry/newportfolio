@@ -48,7 +48,7 @@ export default function Navbar() {
         <div className="flex h-16 items-center justify-between">
           <div className="flex-shrink-0">
             <Link href="#home" className="text-xl font-bold">
-              <span className="text-primary">Dev</span>Portfolio
+              <span className="text-primary">A</span>Portfolio
             </Link>
           </div>
 

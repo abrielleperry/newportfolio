@@ -12,7 +12,7 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="mb-4 md:mb-0">
             <Link href="#home" className="text-xl font-bold">
-              <span className="text-primary">Dev</span>Portfolio
+              <span className="text-primary">A</span>Portfolio
             </Link>
             <p className="text-sm text-muted-foreground mt-1">
               &copy; {new Date().getFullYear()} Abrielle Perry All rights
