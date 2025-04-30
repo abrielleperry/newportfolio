@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Script from "next/script";
-import * as THREE from "three"; // ✅ Import Three.js from npm
+import * as THREE from "three"; // Import Three.js from NPM
 
 declare global {
   interface Window {
@@ -25,7 +25,7 @@ export default function SectionVantaBackground({
   const [vantaEffect, setVantaEffect] = useState<any>(null);
 
   useEffect(() => {
-    // ✅ Inject npm-installed THREE into global scope for Vanta
+    // Assign NPM-installed Three.js to global scope
     if (!window.THREE) {
       window.THREE = THREE;
     }
@@ -58,7 +58,7 @@ export default function SectionVantaBackground({
 
   return (
     <>
-      {/* ✅ Load only Vanta.js, NOT Three.js */}
+      {/* Load only Vanta.js, not Three.js */}
       <Script
         src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.fog.min.js"
         onLoad={() => setScriptsLoaded(true)}
