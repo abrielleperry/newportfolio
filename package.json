@@ -42,6 +42,7 @@
     "@react-three/fiber": "^8.15.12",
     "@tabler/icons-react": "^3.31.0",
     "autoprefixer": "^10.4.20",
+    "bfg": "^0.3.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "1.0.4",
