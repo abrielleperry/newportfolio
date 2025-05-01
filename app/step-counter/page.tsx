@@ -15,8 +15,8 @@ export default function StepCounterPreview() {
         app on your phone, then scan the QR code below:
       </p>
       <img
-        src="/atlas-mobile-intro.png"
-        alt="Lumigram QR Code"
+        src="/atlas-mobile-intro-qr.png"
+        alt="Step counter QR Code"
         className="w-64 h-auto mt-6"
       />
     </div>

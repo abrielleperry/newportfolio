@@ -1,7 +1,6 @@
 "use client";
 
 import type React from "react";
-
 import { useRef, useEffect, useState } from "react";
 import {
   Renderer,
@@ -13,6 +12,7 @@ import {
   Texture,
   type OGLRenderingContext,
 } from "ogl";
+import { useMobile } from "@/hooks/use-mobile";
 
 type GL = OGLRenderingContext;
 type OGLProgram = Program;
@@ -55,6 +55,7 @@ interface MediaParams {
   planeWidth: number;
   planeHeight: number;
   distortion: number;
+  isMobile: boolean;
 }
 
 interface CanvasParams {
@@ -67,6 +68,7 @@ interface CanvasParams {
   scrollEase: number;
   cameraFov: number;
   cameraZ: number;
+  isMobile: boolean;
 }
 
 const vertexShader = `
@@ -237,6 +239,7 @@ class Media {
   planeWidth: number;
   planeHeight: number;
   distortion: number;
+  isMobile: boolean;
 
   program!: OGLProgram;
   plane!: OGLMesh;
@@ -258,6 +261,7 @@ class Media {
     planeWidth,
     planeHeight,
     distortion,
+    isMobile,
   }: MediaParams) {
     this.gl = gl;
     this.geometry = geometry;
@@ -270,6 +274,7 @@ class Media {
     this.planeWidth = planeWidth;
     this.planeHeight = planeHeight;
     this.distortion = distortion;
+    this.isMobile = isMobile;
 
     this.createShader();
     this.createMesh();
@@ -324,10 +329,14 @@ class Media {
   }
 
   setScale() {
+    // Adjust scale based on device type
+    const scaleFactor = this.isMobile ? 0.8 : 1.0;
+
     this.plane.scale.x =
-      (this.viewport.width * this.planeWidth) / this.screen.width;
+      (this.viewport.width * this.planeWidth * scaleFactor) / this.screen.width;
     this.plane.scale.y =
-      (this.viewport.height * this.planeHeight) / this.screen.height;
+      (this.viewport.height * this.planeHeight * scaleFactor) /
+      this.screen.height;
     this.plane.position.x = 0;
     this.program.uniforms.uPlaneSize.value = [
       this.plane.scale.x,
@@ -338,7 +347,12 @@ class Media {
   onResize({
     screen,
     viewport,
-  }: { screen?: ScreenSize; viewport?: ViewportSize } = {}) {
+    isMobile,
+  }: {
+    screen?: ScreenSize;
+    viewport?: ViewportSize;
+    isMobile?: boolean;
+  } = {}) {
     if (screen) this.screen = screen;
     if (viewport) {
       this.viewport = viewport;
@@ -347,9 +361,12 @@ class Media {
         viewport.height,
       ];
     }
+    if (isMobile !== undefined) this.isMobile = isMobile;
+
     this.setScale();
 
-    this.padding = 5;
+    // Adjust padding based on screen size
+    this.padding = this.isMobile ? 3 : 5;
     this.height = this.plane.scale.y + this.padding;
     this.heightTotal = this.height * this.length;
     this.y = -this.heightTotal / 2 + (this.index + 0.5) * this.height;
@@ -392,7 +409,15 @@ class Canvas {
   scroll!: ScrollState;
   cameraFov!: number;
   cameraZ!: number;
+  isMobile!: boolean;
   _wheelThrottleTimeout: any = null;
+  _touchStartY = 0;
+  _touchMoveY = 0;
+  _lastTouchY = 0;
+  _momentum = 0;
+  _momentumMultiplier = 0.95;
+  _isScrolling = false;
+  _scrollTimeout: any = null;
   textures: Texture[] = [];
 
   renderer!: Renderer;
@@ -417,6 +442,7 @@ class Canvas {
     scrollEase,
     cameraFov,
     cameraZ,
+    isMobile,
   }: CanvasParams) {
     // Check if we're in a browser environment
     if (typeof window === "undefined") return;
@@ -435,6 +461,7 @@ class Canvas {
     };
     this.cameraFov = cameraFov;
     this.cameraZ = cameraZ;
+    this.isMobile = isMobile;
 
     AutoBind(this);
     this.createRenderer();
@@ -468,7 +495,8 @@ class Canvas {
   createCamera() {
     this.camera = new Camera(this.gl);
     this.camera.fov = this.cameraFov;
-    this.camera.position.z = this.cameraZ;
+    // Adjust camera position based on device type
+    this.camera.position.z = this.isMobile ? this.cameraZ * 1.2 : this.cameraZ;
   }
 
   createScene() {
@@ -476,10 +504,11 @@ class Canvas {
   }
 
   createGeometry() {
-    // Use more segments for smoother appearance
+    // Use more segments for smoother appearance, but reduce for mobile
+    const segments = this.isMobile ? 8 : 10;
     this.planeGeometry = new Plane(this.gl, {
-      heightSegments: 10,
-      widthSegments: 10,
+      heightSegments: segments,
+      widthSegments: segments,
     });
   }
 
@@ -499,6 +528,7 @@ class Canvas {
           planeWidth: this.planeWidth,
           planeHeight: this.planeHeight,
           distortion: this.distortion,
+          isMobile: this.isMobile,
         })
     );
   }
@@ -542,9 +572,13 @@ class Canvas {
     this.screen = { width: rect.width, height: rect.height };
     this.renderer.setSize(this.screen.width, this.screen.height);
 
+    // Update camera for the new aspect ratio
     this.camera.perspective({
       aspect: this.gl.canvas.width / this.gl.canvas.height,
     });
+
+    // Adjust camera position based on device type
+    this.camera.position.z = this.isMobile ? this.cameraZ * 1.2 : this.cameraZ;
 
     const fov = (this.camera.fov * Math.PI) / 180;
     const height = 2 * Math.tan(fov / 2) * this.camera.position.z;
@@ -552,25 +586,78 @@ class Canvas {
     this.viewport = { width, height };
 
     this.medias?.forEach((media) =>
-      media.onResize({ screen: this.screen, viewport: this.viewport })
+      media.onResize({
+        screen: this.screen,
+        viewport: this.viewport,
+        isMobile: this.isMobile,
+      })
     );
   }
 
   onTouchDown(e: MouseEvent | TouchEvent) {
     this.isDown = true;
     this.scroll.position = this.scroll.current;
-    this.start = "touches" in e ? e.touches[0].clientY : e.clientY;
+
+    if ("touches" in e) {
+      this._touchStartY = e.touches[0].clientY;
+      this._lastTouchY = this._touchStartY;
+      this._momentum = 0;
+    } else {
+      this.start = e.clientY;
+    }
   }
 
   onTouchMove(e: MouseEvent | TouchEvent) {
-    if (!this.isDown || !this.scroll.position) return;
-    const y = "touches" in e ? e.touches[0].clientY : e.clientY;
-    const distance = (this.start - y) * 0.1;
-    this.scroll.target = this.scroll.position + distance;
+    if (!this.isDown) return;
+
+    if ("touches" in e) {
+      // Mobile touch handling with momentum
+      this._touchMoveY = e.touches[0].clientY;
+      const delta = (this._lastTouchY - this._touchMoveY) * 0.1;
+
+      if (this.scroll.position !== undefined) {
+        this.scroll.target = this.scroll.position + delta;
+      }
+
+      // Calculate momentum based on touch movement
+      this._momentum = delta;
+      this._lastTouchY = this._touchMoveY;
+
+      // Prevent default to avoid page scrolling
+      e.preventDefault();
+    } else if (this.scroll.position !== undefined) {
+      // Mouse handling
+      const distance = (this.start - e.clientY) * 0.1;
+      this.scroll.target = this.scroll.position + distance;
+    }
+
+    // Set scrolling flag and clear any existing timeout
+    this._isScrolling = true;
+    if (this._scrollTimeout) {
+      clearTimeout(this._scrollTimeout);
+    }
+
+    // Reset scrolling flag after a delay
+    this._scrollTimeout = setTimeout(() => {
+      this._isScrolling = false;
+    }, 100);
   }
 
   onTouchUp() {
     this.isDown = false;
+
+    // Apply momentum for smoother scrolling on touch devices
+    if (this._momentum !== 0) {
+      const applyMomentum = () => {
+        if (Math.abs(this._momentum) > 0.01) {
+          this.scroll.target += this._momentum;
+          this._momentum *= this._momentumMultiplier;
+          requestAnimationFrame(applyMomentum);
+        }
+      };
+
+      requestAnimationFrame(applyMomentum);
+    }
   }
 
   onWheel(e: WheelEvent) {
@@ -581,15 +668,19 @@ class Canvas {
       this._wheelThrottleTimeout = null;
     }, 16); // ~60fps
 
-    this.scroll.target += e.deltaY * 0.003; // Reduced sensitivity
+    // Adjust sensitivity based on device
+    const sensitivity = this.isMobile ? 0.002 : 0.003;
+    this.scroll.target += e.deltaY * sensitivity;
+
+    // Prevent default to avoid page scrolling
+    e.preventDefault();
   }
 
   update() {
-    this.scroll.current = lerp(
-      this.scroll.current,
-      this.scroll.target,
-      this.scroll.ease
-    );
+    // Apply easing to scrolling
+    const ease = this._isScrolling ? this.scroll.ease * 0.6 : this.scroll.ease;
+    this.scroll.current = lerp(this.scroll.current, this.scroll.target, ease);
+
     this.medias?.forEach((media) => media.update(this.scroll));
     this.renderer.render({ scene: this.scene, camera: this.camera });
     this.scroll.last = this.scroll.current;
@@ -598,24 +689,55 @@ class Canvas {
 
   addEventListeners() {
     window.addEventListener("resize", this.onResize);
-    window.addEventListener("wheel", this.onWheel);
-    window.addEventListener("mousedown", this.onTouchDown);
+
+    // Mouse events
+    this.canvas.addEventListener("wheel", this.onWheel, { passive: false });
+    this.canvas.addEventListener("mousedown", this.onTouchDown);
     window.addEventListener("mousemove", this.onTouchMove);
     window.addEventListener("mouseup", this.onTouchUp);
-    window.addEventListener("touchstart", this.onTouchDown as EventListener);
-    window.addEventListener("touchmove", this.onTouchMove as EventListener);
-    window.addEventListener("touchend", this.onTouchUp as EventListener);
+
+    // Touch events with passive: false to prevent scrolling
+    this.canvas.addEventListener(
+      "touchstart",
+      this.onTouchDown as EventListener,
+      { passive: true }
+    );
+    this.canvas.addEventListener(
+      "touchmove",
+      this.onTouchMove as EventListener,
+      { passive: false }
+    );
+    this.canvas.addEventListener("touchend", this.onTouchUp as EventListener, {
+      passive: true,
+    });
   }
 
   destroy() {
     window.removeEventListener("resize", this.onResize);
-    window.removeEventListener("wheel", this.onWheel);
-    window.removeEventListener("mousedown", this.onTouchDown);
+
+    // Clean up mouse events
+    this.canvas.removeEventListener("wheel", this.onWheel);
+    this.canvas.removeEventListener("mousedown", this.onTouchDown);
     window.removeEventListener("mousemove", this.onTouchMove);
     window.removeEventListener("mouseup", this.onTouchUp);
-    window.removeEventListener("touchstart", this.onTouchDown as EventListener);
-    window.removeEventListener("touchmove", this.onTouchMove as EventListener);
-    window.removeEventListener("touchend", this.onTouchUp as EventListener);
+
+    // Clean up touch events
+    this.canvas.removeEventListener(
+      "touchstart",
+      this.onTouchDown as EventListener
+    );
+    this.canvas.removeEventListener(
+      "touchmove",
+      this.onTouchMove as EventListener
+    );
+    this.canvas.removeEventListener(
+      "touchend",
+      this.onTouchUp as EventListener
+    );
+
+    // Clear any pending timeouts
+    if (this._wheelThrottleTimeout) clearTimeout(this._wheelThrottleTimeout);
+    if (this._scrollTimeout) clearTimeout(this._scrollTimeout);
   }
 }
 
@@ -645,6 +767,9 @@ export default function FlyingPosters({
   const instanceRef = useRef<Canvas | null>(null);
   const [isMounted, setIsMounted] = useState(false);
 
+  // Use the existing useMobile hook
+  const isMobile = useMobile();
+
   useEffect(() => {
     setIsMounted(true);
   }, []);
@@ -662,6 +787,7 @@ export default function FlyingPosters({
       scrollEase,
       cameraFov,
       cameraZ,
+      isMobile,
     });
 
     return () => {
@@ -676,31 +802,42 @@ export default function FlyingPosters({
     scrollEase,
     cameraFov,
     cameraZ,
+    isMobile,
     isMounted,
   ]);
 
+  // Handle resize events
+  useEffect(() => {
+    if (!instanceRef.current) return;
+
+    const handleResize = () => {
+      if (instanceRef.current) {
+        instanceRef.current.isMobile = isMobile;
+        instanceRef.current.onResize();
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [isMobile]);
+
+  // Prevent page scrolling when interacting with canvas
   useEffect(() => {
     if (!canvasRef.current) return;
 
     const canvasEl = canvasRef.current;
 
-    const handleWheel = (e: WheelEvent) => {
+    const preventScroll = (e: Event) => {
       e.preventDefault();
-      if (instanceRef.current) {
-        instanceRef.current.onWheel(e);
-      }
     };
 
-    const handleTouchMove = (e: TouchEvent) => {
-      e.preventDefault(); // Prevents touch-based scrolling
-    };
-
-    canvasEl.addEventListener("wheel", handleWheel, { passive: false });
-    canvasEl.addEventListener("touchmove", handleTouchMove, { passive: false });
+    // Add passive: false to allow preventDefault()
+    canvasEl.addEventListener("wheel", preventScroll, { passive: false });
+    canvasEl.addEventListener("touchmove", preventScroll, { passive: false });
 
     return () => {
-      canvasEl.removeEventListener("wheel", handleWheel);
-      canvasEl.removeEventListener("touchmove", handleTouchMove);
+      canvasEl.removeEventListener("wheel", preventScroll);
+      canvasEl.removeEventListener("touchmove", preventScroll);
     };
   }, []);
 
@@ -711,6 +848,11 @@ export default function FlyingPosters({
       {...props}
     >
       <canvas ref={canvasRef} className="block w-full h-full" />
+      {isMobile && (
+        <div className="absolute bottom-[-1] left-0 right-0 text-center text-xs text-gray-500 opacity-70 pointer-events-none">
+          Drag posters to interact
+        </div>
+      )}
     </div>
   );
 }

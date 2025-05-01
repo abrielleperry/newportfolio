@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState, useEffect } from "react";
+import { Suspense, useState, useEffect, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import { Button } from "@/components/ui/button";
@@ -9,83 +9,179 @@ import Link from "next/link";
 import Model3D from "@/components/3d/model";
 import RotatingText from "@/components/rotating-text";
 import SectionVantaBackground from "@/components/section-vanta-background";
+import { useMobile } from "@/hooks/use-mobile";
 
 export default function Hero() {
   const [mounted, setMounted] = useState(false);
+  const isMobile = useMobile();
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const modelContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  // This effect ensures the model doesn't block interactions on mobile
+  useEffect(() => {
+    if (!isMobile || !modelContainerRef.current) return;
+
+    // Function to make the model container non-interactive when touching buttons or scrolling
+    const makeNonInteractive = () => {
+      if (modelContainerRef.current) {
+        modelContainerRef.current.style.pointerEvents = "none";
+      }
+    };
+
+    // Apply immediately and whenever window is resized
+    makeNonInteractive();
+    window.addEventListener("resize", makeNonInteractive);
+
+    return () => {
+      window.removeEventListener("resize", makeNonInteractive);
+    };
+  }, [isMobile, modelContainerRef]);
+
   return (
-    <section id="home" className="relative min-h-screen flex items-center">
+    <section
+      id="home"
+      className="relative min-h-screen flex items-center overflow-hidden"
+    >
       {/* Add Vanta background to hero section */}
       <SectionVantaBackground />
 
-      {/* Background gradient */}
+      {/* 3D Model - Desktop: Background, Mobile: On top visually but non-interactive */}
+      {isMobile ? (
+        // Mobile: Position the 3D model on top of the blur card and below the View Projects button
+        <div
+          ref={modelContainerRef}
+          className="absolute left-0 right-0 top-[calc(100%-325px)] h-[300px] z-20 pointer-events-none"
+          style={{ touchAction: "none" }}
+        >
+          {mounted && (
+            <Canvas
+              ref={canvasRef}
+              camera={{ position: [0, 0, 5], fov: 45 }}
+              shadows
+              dpr={[1, 2]}
+              gl={{ antialias: true, alpha: true }}
+              className="bg-transparent"
+              style={{ pointerEvents: "none", touchAction: "none" }}
+            >
+              <Suspense fallback={null}>
+                <Model3D />
+                {/* Ambient light for overall illumination */}
+                <ambientLight intensity={1.0} />
 
-      {/* 3D Model */}
-      <div className="absolute inset-0 -z-5">
-        {mounted && (
-          <Canvas
-            camera={{ position: [0, 0, 5], fov: 45 }}
-            shadows
-            dpr={[1, 2]}
-            gl={{ antialias: true, alpha: true }}
-            className="bg-transparent"
-          >
-            <Suspense fallback={null}>
-              <Model3D />
-              {/* Ambient light for overall illumination */}
-              <ambientLight intensity={1.0} />
+                {/* Main spotlight adjusted for the tilted laptop */}
+                <spotLight
+                  position={[1.5, 3, 6]}
+                  angle={0.4}
+                  penumbra={1}
+                  intensity={1.8}
+                  castShadow
+                />
 
-              {/* Main spotlight adjusted for the tilted laptop */}
-              <spotLight
-                position={[1.5, 3, 6]}
-                angle={0.4}
-                penumbra={1}
-                intensity={1.8}
-                castShadow
+                {/* Secondary spotlight for side illumination */}
+                <spotLight
+                  position={[5, 4, 3]}
+                  angle={0.3}
+                  penumbra={1}
+                  intensity={1}
+                  castShadow
+                />
+
+                {/* Fill light from below to reduce harsh shadows */}
+                <directionalLight position={[-5, -2, 3]} intensity={0.3} />
+
+                {/* Top light for general illumination */}
+                <directionalLight position={[0, 5, 2]} intensity={0.6} />
+
+                {/* Screen-specific light adjusted for the tilted laptop - updated to match new color scheme */}
+                <pointLight
+                  position={[1.5, -1, 4]}
+                  intensity={1.5}
+                  color="#71bbb2"
+                  distance={10}
+                  decay={2}
+                />
+              </Suspense>
+              {/* Disable controls on mobile */}
+              <OrbitControls
+                enableZoom={false}
+                enablePan={false}
+                enableRotate={false}
+                autoRotate={false}
               />
+            </Canvas>
+          )}
+        </div>
+      ) : (
+        // Desktop: Keep the 3D model in the background
+        <div className="absolute inset-0 -z-5">
+          {mounted && (
+            <Canvas
+              ref={canvasRef}
+              camera={{ position: [0, 0, 5], fov: 45 }}
+              shadows
+              dpr={[1, 2]}
+              gl={{ antialias: true, alpha: true }}
+              className="bg-transparent"
+            >
+              <Suspense fallback={null}>
+                <Model3D />
+                {/* Ambient light for overall illumination */}
+                <ambientLight intensity={1.0} />
 
-              {/* Secondary spotlight for side illumination */}
-              <spotLight
-                position={[5, 4, 3]}
-                angle={0.3}
-                penumbra={1}
-                intensity={1}
-                castShadow
+                {/* Main spotlight adjusted for the tilted laptop */}
+                <spotLight
+                  position={[1.5, 3, 6]}
+                  angle={0.4}
+                  penumbra={1}
+                  intensity={1.8}
+                  castShadow
+                />
+
+                {/* Secondary spotlight for side illumination */}
+                <spotLight
+                  position={[5, 4, 3]}
+                  angle={0.3}
+                  penumbra={1}
+                  intensity={1}
+                  castShadow
+                />
+
+                {/* Fill light from below to reduce harsh shadows */}
+                <directionalLight position={[-5, -2, 3]} intensity={0.3} />
+
+                {/* Top light for general illumination */}
+                <directionalLight position={[0, 5, 2]} intensity={0.6} />
+
+                {/* Screen-specific light adjusted for the tilted laptop - updated to match new color scheme */}
+                <pointLight
+                  position={[1.5, -1, 4]}
+                  intensity={1.5}
+                  color="#71bbb2"
+                  distance={10}
+                  decay={2}
+                />
+              </Suspense>
+              {/* Enable controls on desktop */}
+              <OrbitControls
+                enableZoom={false}
+                enablePan={false}
+                enableRotate={true}
+                autoRotate={false}
+                maxPolarAngle={Math.PI / 2}
+                minPolarAngle={Math.PI / 2}
+                makeDefault
               />
+            </Canvas>
+          )}
+        </div>
+      )}
 
-              {/* Fill light from below to reduce harsh shadows */}
-              <directionalLight position={[-5, -2, 3]} intensity={0.3} />
-
-              {/* Top light for general illumination */}
-              <directionalLight position={[0, 5, 2]} intensity={0.6} />
-
-              {/* Screen-specific light adjusted for the tilted laptop - updated to match new color scheme */}
-              <pointLight
-                position={[1.5, -1, 4]}
-                intensity={1.5}
-                color="#71bbb2"
-                distance={10}
-                decay={2}
-              />
-            </Suspense>
-            {/* Disable auto-rotation since we have our own animation sequence */}
-            <OrbitControls
-              enableZoom={false}
-              enablePan={false}
-              autoRotate={false}
-              maxPolarAngle={Math.PI / 2}
-              minPolarAngle={Math.PI / 2}
-            />
-          </Canvas>
-        )}
-      </div>
-
-      {/* Content */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      {/* Content - Ensure it's interactive by setting a higher pointer-events-auto */}
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pointer-events-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
           <div className="max-w-2xl backdrop-blur-sm bg-background/30 dark:bg-background/40 p-6 rounded-xl">
             <p className="text-lg sm:text-xl font-medium text-primary mb-2">
@@ -115,22 +211,27 @@ export default function Hero() {
               and contribute to innovative projects.
             </p>
 
-            <div className="flex flex-wrap gap-4">
-              <Button size="lg" asChild>
+            <div className="flex flex-wrap gap-4 relative z-30 pointer-events-auto">
+              <Button size="lg" asChild className="relative z-30">
                 <Link href="#contact">Get In Touch</Link>
               </Button>
-              <Button size="lg" variant="outline" asChild>
+              <Button
+                size="lg"
+                variant="outline"
+                asChild
+                className="relative z-30"
+              >
                 <Link href="#projects">View Projects</Link>
               </Button>
             </div>
 
-            <div className="flex items-center mt-8 gap-4">
+            <div className="flex items-center mt-8 gap-4 relative z-30 pointer-events-auto">
               <Link
                 href="https://github.com/yourusername"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <Button variant="ghost" size="icon">
+                <Button variant="ghost" size="icon" className="relative z-30">
                   <Github className="h-5 w-5" />
                   <span className="sr-only">GitHub</span>
                 </Button>
@@ -140,7 +241,7 @@ export default function Hero() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <Button variant="ghost" size="icon">
+                <Button variant="ghost" size="icon" className="relative z-30">
                   <Linkedin className="h-5 w-5" />
                   <span className="sr-only">LinkedIn</span>
                 </Button>
@@ -153,10 +254,14 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Scroll Down Indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+      {/* Scroll Down Indicator - Ensure it's on top and interactive */}
+      <div className="absolute bottom-8 left-0 right-0 flex justify-center animate-bounce pointer-events-auto">
         <Link href="#about">
-          <Button variant="ghost" size="icon" className="rounded-full">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="rounded-full z-40 relative"
+          >
             <ArrowDown className="h-6 w-6" />
             <span className="sr-only">Scroll Down</span>
           </Button>

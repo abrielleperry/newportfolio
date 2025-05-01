@@ -16,7 +16,6 @@ import {
   Layers,
   Palette,
   FileCode,
-  Monitor,
   Cloud,
   GitBranch,
   Package,
@@ -148,13 +147,13 @@ export default function SkillsNoRatings() {
 
             {Object.entries(skills).map(([category, skillList]) => (
               <TabsContent key={category} value={category} className="mt-0">
-                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                   {skillList.map((skill) => (
                     <Card
                       key={skill.name}
                       className="overflow-hidden group hover:shadow-md transition-all"
                     >
-                      <CardContent className="p-6">
+                      <CardContent className="p-4 md:p-6">
                         <div className="flex flex-col items-center justify-center text-center h-full">
                           <div className="mb-3 text-primary">{skill.icon}</div>
                           <h3 className="font-medium text-lg group-hover:text-primary transition-colors">
@@ -200,7 +199,7 @@ export default function SkillsNoRatings() {
         )}
 
         {displayOption === "categories" && (
-          <div className="grid md:grid-cols-3 gap-8 mt-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-8 mt-8">
             <Card>
               <CardContent className="p-6">
                 <div className="flex items-center gap-2 mb-4 text-primary">
@@ -277,7 +276,7 @@ export default function SkillsNoRatings() {
 
         {displayOption === "logos" && (
           <div className="mt-8">
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-8">
               {Object.values(skills)
                 .flat()
                 .map((skill) => (

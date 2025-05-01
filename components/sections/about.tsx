@@ -105,21 +105,25 @@ export default function About() {
                     projects and drive measurable results for clients.
                   </p>
                   <p className={paragraphClass(3)}>
-                    When I'm not coding, you can find me crafting, reading books
-                    on garden design, exploring graphic design trends, visiting
-                    art exhibits, creating in Adobe Illustrator, and dining at
-                    new places with friends. I believe these activities help me
-                    maintain a creative mindset that I bring to my development
-                    work.
+                    When I’m not coding, I enjoy crafting, reading about garden
+                    design, exploring graphic design trends, visiting museums
+                    and art exhibits, creating in Adobe Illustrator, spending
+                    time outdoors, and discovering new restaurants with friends.
+                    These experiences fuel my creativity and continuously
+                    inspire the design-oriented mindset I bring to my
+                    development work.
                   </p>
                 </div>
                 <div className="mt-6 flex flex-wrap gap-2">
                   <div className="flex space-x-2 flex-grow">
                     <Button asChild variant="outline" size="sm">
                       <Link href="tel:+19187285419">
-                        <Phone className="mr-1 h-4 w-4" /> 918-728-5419
+                        <Phone className="mr-1 h-4 w-4" />
+                        <span className="block md:hidden">Call Me</span>
+                        <span className="hidden md:inline">918-728-5419</span>
                       </Link>
                     </Button>
+
                     <Button
                       asChild
                       variant="outline"
@@ -131,7 +135,8 @@ export default function About() {
                         className="truncate"
                       >
                         <Mail className="mr-1 h-4 w-4 flex-shrink-0" />
-                        <span className="truncate">
+                        <span className="block md:hidden">Email Me</span>
+                        <span className="hidden md:inline truncate">
                           abrielleperry22@icloud.com
                         </span>
                       </Link>
@@ -166,14 +171,6 @@ export default function About() {
                 showMobileWarning={false}
                 showTooltip={true}
                 displayOverlayContent={true}
-                overlayContent={
-                  <div className="absolute bottom-4 left-0 right-0 text-center">
-                    <div className="bg-primary/80 text-primary-foreground backdrop-blur-sm px-4 py-2 rounded-lg mx-4">
-                      <p className="font-medium">Abrielle Perry</p>
-                      <p className="text-sm">Fullstack Developer</p>
-                    </div>
-                  </div>
-                }
               />
             </div>
           </div>

@@ -17,19 +17,19 @@ export default function Model3D() {
   const spotLightRef = useRef<THREE.SpotLight>(null);
   const directionalLightRef = useRef<THREE.DirectionalLight>(null);
 
-  // Animation state
+  // Animation state with mobile-specific parameters
   const animationState = useRef({
     phase: "slide-in", // "slide-in", "spin", "transition", "hover"
     startTime: 0,
-    slideInDuration: 4, // seconds
-    spinDuration: 1.2, // seconds
+    slideInDuration: isMobile ? 2 : 4, // faster on mobile
+    spinDuration: isMobile ? 0.8 : 1.2, // faster on mobile
     transitionDuration: 0.8, // seconds for smooth transition
-    startX: 8, // start position off-screen to the right
-    targetX: 1.5, // final x position (moved to the right)
+    startX: isMobile ? 5 : 8, // start position (closer on mobile)
+    targetX: isMobile ? 0 : 1.5, // centered on mobile
     // Adjusted rotation values to face more toward the front
     spinStartRotation: Math.PI * 0.9,
     spinEndRotation: Math.PI * 0.9 + Math.PI * 2, // full 360 degree spin + starting rotation
-    hoverAmplitude: 0.1,
+    hoverAmplitude: isMobile ? 0.05 : 0.1, // smaller hover on mobile
     hoverFrequency: 0.5,
     // Store the actual final rotation from spin phase
     finalSpinRotation: 0,
@@ -119,7 +119,7 @@ export default function Model3D() {
       // Calculate progress (0 to 1)
       const transProgress = Math.min(elapsedTime / state.transitionDuration, 1);
 
-      // Ease in-out function for smoother transition - FIXED: using transProgress instead of spinProgress
+      // Ease in-out function for smoother transition
       const easeInOutProgress =
         transProgress < 0.5
           ? 2 * transProgress * transProgress
@@ -300,7 +300,7 @@ export default function Model3D() {
     );
   }
 
-  const scale = isMobile ? 0.4 : 0.6;
+  const scale = isMobile ? 0.55 : 0.6; // Smaller on mobile
   const isDarkTheme = theme === "dark";
 
   return (
