@@ -4,7 +4,6 @@ import { useState } from "react";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -12,12 +11,20 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ExternalLink, Github } from "lucide-react";
+import { ExternalLink, Github, Info } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import SectionHeading from "@/components/section-heading";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
-// Sample project data - replace with your own projects
+// Sample project data - using the same data but with a cleaner presentation
 const projects = [
   {
     id: 1,
@@ -29,6 +36,8 @@ const projects = [
     liveUrl: "https://abrielleperry.github.io/atlas-smiling-school/",
     githubUrl: "https://github.com/abrielleperry/atlas-smiling-school",
     category: "frontend",
+    shortDescription:
+      "A responsive website built from Figma designs with Bootstrap 4, focusing on pixel-perfect accuracy and accessibility.",
   },
   {
     id: 2,
@@ -49,6 +58,8 @@ const projects = [
     liveUrl: "https://youtu.be/jI2o5c4G3tk?si=evtnRGviZsKN5Y58",
     githubUrl: "https://github.com/abrielleperry/reality-check",
     category: "fullstack",
+    shortDescription:
+      "A dynamic dashboard for real-time data visualization using Flask, Plotly, and Dash with responsive design.",
   },
   {
     id: 3,
@@ -60,6 +71,8 @@ const projects = [
     liveUrl: "https://youtu.be/zLmg_9gNrF8?si=U1mVbBJsQGx6VfwJ",
     githubUrl: "https://github.com/abrielleperry/gardening-shop",
     category: "fullstack",
+    shortDescription:
+      "A full-stack e-commerce platform for plants with advanced filtering and responsive design built with Flask and JavaScript.",
   },
   {
     id: 4,
@@ -81,6 +94,8 @@ const projects = [
     liveUrl: "https://youtu.be/rxa-jZwauvg?si=3ZD10nkyNYrR-R89",
     githubUrl: "https://github.com/Frankblation/Rippl_Capstone",
     category: "fullstack",
+    shortDescription:
+      "A cross-platform mobile app connecting users based on shared interests, built with React Native, Supabase, and ML-powered recommendations.",
   },
   {
     id: 5,
@@ -101,6 +116,8 @@ const projects = [
     liveUrl: "https://joy-of-painting-api-74b668857b2b.herokuapp.com/api-docs",
     githubUrl: "https://github.com/abrielleperry/atlas-the-joy-of-painting-api",
     category: "backend",
+    shortDescription:
+      "A REST API serving data about Bob Ross's 'The Joy of Painting' episodes, built with Node.js, Express, and MongoDB.",
   },
   {
     id: 6,
@@ -120,13 +137,15 @@ const projects = [
     liveUrl: "https://vercel.com/abrielleperrys-projects/atlas-nextjs",
     githubUrl: "https://github.com/abrielleperry/atlas-nextjs",
     category: "fullstack",
+    shortDescription:
+      "A discussion forum built with Next.js 13+ App Router, React Server Components, and PostgreSQL with authentication.",
   },
   {
     id: 7,
     title: "Movie Discovery App",
     description:
-      "Cinema Guru is a full stack web application that allows users to browse, favorite, and save movies to a watch later list using a clean, responsive React interface. I built the application using Next.js 13’s App Router, implementing both server-rendered and client-rendered components to balance performance and interactivity. I integrated GitHub OAuth for authentication and protected routes, ensuring only logged-in users could access the core features of the app. Users can filter movies by genre, release year, or title, and interact with hoverable movie cards that visually reflect each movie’s favorited or saved state. I connected the frontend to a PostgreSQL database through a RESTful API and built a dynamic layout system with an expanding sidebar and real-time activity feed. I also deployed the app on Vercel, managing environment variables and database connections securely. This project demonstrates my ability to architect full stack React applications with authentication, stateful UI components, and backend integration.",
-    image: "cinema.png",
+      "Cinema Guru is a full stack web application that allows users to browse, favorite, and save movies to a watch later list using a clean, responsive React interface. I built the application using Next.js 13's App Router, implementing both server-rendered and client-rendered components to balance performance and interactivity. I integrated GitHub OAuth for authentication and protected routes, ensuring only logged-in users could access the core features of the app. Users can filter movies by genre, release year, or title, and interact with hoverable movie cards that visually reflect each movie's favorited or saved state. I connected the frontend to a PostgreSQL database through a RESTful API and built a dynamic layout system with an expanding sidebar and real-time activity feed. I also deployed the app on Vercel, managing environment variables and database connections securely. This project demonstrates my ability to architect full stack React applications with authentication, stateful UI components, and backend integration.",
+    image: "/cinema.png",
     tags: [
       "React",
       "Next.js",
@@ -139,15 +158,17 @@ const projects = [
     liveUrl: "https://atlas-cinema-guru-aperry.vercel.app/",
     githubUrl: "atlas-cinema-guru-aperry.vercel.app",
     category: "fullstack",
+    shortDescription:
+      "A movie discovery app with favorites and watch-later features built with Next.js, React, and PostgreSQL.",
   },
   {
     id: 8,
     title: "Music Player App",
     description:
       "This Music Player is a fully responsive, feature-rich audio interface that I built from static design to full interactivity using modern React tooling and TypeScript. I translated a Figma design into custom Tailwind-styled components, implemented responsive layouts and dark mode support, and configured a personalized design system with custom colors, themes, and animations. From there, I architected the component logic using React hooks and centralized state, managing playback, shuffle, speed, volume, and song switching using real-time data fetched from an external API. Each component was written in TypeScript with strict prop typing, and the app features hoverable lyrics, a real-time playlist with dynamic selection, and an embedded custom audio player powered by HTML audio elements. I wrote snapshot tests, interaction tests, and API mocks using Vitest, React Testing Library, and MSW, achieving high test coverage. I also set up continuous integration with GitHub Actions to automate testing and coverage reporting on each commit. The project is deployed to Netlify and performs consistently across screen sizes and system color preferences.",
-    image: "music-player.png",
+    image: "/music-player.png",
     tags: [
-      " React",
+      "React",
       "TypeScript",
       "Tailwind CSS",
       "Vite",
@@ -159,13 +180,15 @@ const projects = [
     liveUrl: "https://atlas-music-player-aperry.netlify.app/",
     githubUrl: "https://github.com/abrielleperry/atlas-music-player",
     category: "fullstack",
+    shortDescription:
+      "A responsive music player with playback controls, playlists, and lyrics built with React, TypeScript, and Tailwind CSS.",
   },
   {
     id: 9,
     title: "Files Manager",
     description:
       "Atlas Files Manager is a full back-end application that replicates the core functionality of a file hosting service. I built a robust RESTful API using Node.js and Express that handles user authentication, file uploads, permission management, background job processing, and dynamic file serving. Authentication is handled through token-based security, with Redis used for efficient session storage and expiration. I developed endpoints for uploading, listing, and viewing files, along with controlling public or private access permissions. MongoDB was used for persistent storage of users and files, and Redis provided fast in-memory management of authentication tokens and background job queues. For image uploads, I implemented a background worker using Bull that automatically generated multiple thumbnail sizes, offloading intensive processing tasks from the main API thread. I also created features for paginated file listings, dynamic folder structures, and direct file retrieval with MIME-type handling. This project showcases my ability to integrate databases, authentication systems, file storage, background processing, and scalable RESTful architecture into a cohesive and production-ready back-end service.",
-    image: "files-manager.jpeg",
+    image: "/files-manager.jpeg",
     tags: [
       "Node.js",
       "Express",
@@ -182,10 +205,58 @@ const projects = [
     liveUrl: "https://abrielleperry.github.io/atlas-atlas-files_manager/",
     githubUrl: "https://github.com/abrielleperry/atlas-atlas-files_manager",
     category: "backend",
+    shortDescription:
+      "A file hosting service backend with authentication, file uploads, and background processing using Node.js, Express, MongoDB, and Redis.",
+  },
+  {
+    id: 10,
+    title: "Lumigram",
+    description:
+      "I built Lumigram, a fully responsive mobile social app using React Native, Expo, and Firebase. The app allows users to register, log in, and navigate through authenticated and unauthenticated routes using a stack and tab navigation system. Users can upload images with captions, view an infinite-scroll home feed, favorite posts with double-tap gestures, and manage their profile and media. I integrated Firebase Auth for secure authentication, Firebase Storage for media uploads, and Firestore to handle user data, posts, favorites, and profile metadata. The app features mobile-native gestures, paginated feeds using FlashList, and real-time data synchronization. This project highlights my skills in mobile-first UI development, backend integration, and building cross-platform apps with modern tooling.",
+    image: "/lumigram-qr.png",
+    tags: [
+      "React Native",
+      "Expo",
+      "TypeScript",
+      "Firebase Auth",
+      "Firebase Storage",
+      "Firestore",
+      "FlashList",
+      "React Native Gesture Handler",
+    ],
+    liveUrl: "/lumigram",
+    githubUrl: "https://github.com/abrielleperry/atlas-lumigram",
+    category: "fullstack",
+    shortDescription:
+      "Developed a full stack mobile app using React Native, Expo, and Firebase with secure auth, media uploads, profile management, and gesture-based interaction, demonstrating expertise in mobile UI design, backend integration, and cross-platform development.",
+  },
+  {
+    id: 11,
+    title: "Step Counter",
+    description:
+      "Step Tracker is a mobile application built with React Native and Expo that allows users to log and manage their daily step count. I implemented multi-screen navigation using Expo Router and handled persistent data storage through an SQLite database integrated with the app. On the technical side, I created a fully functional activity log with dynamic insertion, deletion, and auto-refresh using SQL queries. I used FlashList to efficiently render large lists of step entries with high performance on mobile devices. To enhance interactivity, I implemented gesture-based controls, allowing users to swipe individual entries to reveal delete actions. I also built a global 'delete all' feature and ensured the app matched a provided Figma design using custom styles and layout techniques. This project demonstrates my ability to build interactive, database-driven mobile applications with smooth navigation, gesture handling, and performance optimization in React Native.",
+    image: "/atlas-mobile-intro-qr.png",
+    tags: [
+      "React Native",
+      "Expo",
+      "SQLite",
+      "FlashList",
+      "Expo Router",
+      "Gesture Handling",
+      "Mobile UI",
+      "SQL",
+      "TypeScript",
+      "JavaScript",
+    ],
+    liveUrl: "/step-counter",
+    githubUrl: "https://github.com/abrielleperry/atlas-mobile-intro",
+    category: "fullstack",
+    shortDescription:
+      "A React Native app for tracking daily steps with SQLite persistence, gesture controls, and FlashList rendering.",
   },
 ];
 
-export default function Projects() {
+export default function ProjectsVariation1() {
   const [activeTab, setActiveTab] = useState("all");
 
   const filteredProjects =
@@ -194,7 +265,10 @@ export default function Projects() {
       : projects.filter((project) => project.category === activeTab);
 
   return (
-    <section id="projects" className="py-20 bg-muted/50">
+    <section
+      id="projects"
+      className="py-20 bg-gradient-to-b from-background to-muted/30"
+    >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeading
           title="My Projects"
@@ -203,7 +277,7 @@ export default function Projects() {
 
         <Tabs defaultValue="all" className="mt-12" onValueChange={setActiveTab}>
           <div className="flex justify-center mb-8">
-            <TabsList>
+            <TabsList className="bg-background/80 backdrop-blur-sm">
               <TabsTrigger value="all">All Projects</TabsTrigger>
               <TabsTrigger value="frontend">Frontend</TabsTrigger>
               <TabsTrigger value="backend">Backend</TabsTrigger>
@@ -212,52 +286,129 @@ export default function Projects() {
           </div>
 
           <TabsContent value={activeTab} className="mt-0">
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredProjects.map((project) => (
                 <Card
                   key={project.id}
-                  className="overflow-hidden flex flex-col h-full"
+                  className="overflow-hidden flex flex-col h-full border border-border/40 bg-background/80 backdrop-blur-sm hover:shadow-lg transition-all duration-300"
                 >
-                  <div className="relative h-48 w-full">
+                  <div className="relative h-48 w-full overflow-hidden group">
                     <Image
-                      src={project.image || "/placeholder.svg"}
+                      src={
+                        project.image ||
+                        "/placeholder.svg?height=400&width=600&query=project thumbnail"
+                      }
                       alt={project.title}
                       fill
-                      className="object-cover"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   </div>
-                  <CardHeader>
-                    <CardTitle>{project.title}</CardTitle>
-                    <CardDescription>{project.description}</CardDescription>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-xl">{project.title}</CardTitle>
                   </CardHeader>
-                  <CardContent className="flex-grow">
-                    <div className="flex flex-wrap gap-2">
-                      {project.tags.map((tag) => (
-                        <Badge key={tag} variant="secondary">
+                  <CardContent className="flex-grow pb-2">
+                    <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
+                      {project.shortDescription}
+                    </p>
+                    <div className="flex flex-wrap gap-1.5 mt-auto">
+                      {project.tags.slice(0, 4).map((tag) => (
+                        <Badge
+                          key={tag}
+                          variant="secondary"
+                          className="text-xs px-2 py-0.5"
+                        >
                           {tag}
                         </Badge>
                       ))}
+                      {project.tags.length > 4 && (
+                        <Badge
+                          variant="outline"
+                          className="text-xs px-2 py-0.5"
+                        >
+                          +{project.tags.length - 4}
+                        </Badge>
+                      )}
                     </div>
                   </CardContent>
-                  <CardFooter className="flex justify-between">
-                    <Button variant="outline" size="sm" asChild>
-                      <Link
-                        href={project.githubUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <Github className="mr-2 h-4 w-4" /> Code
-                      </Link>
-                    </Button>
-                    <Button size="sm" asChild>
-                      <Link
-                        href={project.liveUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <ExternalLink className="mr-2 h-4 w-4" /> Demo
-                      </Link>
-                    </Button>
+                  <CardFooter className="flex justify-between pt-2">
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button variant="ghost" size="sm">
+                          <Info className="h-4 w-4 mr-1" /> Details
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+                        <DialogHeader>
+                          <DialogTitle>{project.title}</DialogTitle>
+                          <DialogDescription>
+                            <div className="relative h-60 w-full my-4">
+                              <Image
+                                src={
+                                  project.image ||
+                                  "/placeholder.svg?height=400&width=600&query=project thumbnail"
+                                }
+                                alt={project.title}
+                                fill
+                                className="object-cover rounded-md"
+                              />
+                            </div>
+                            <div className="flex flex-wrap gap-2 mb-4">
+                              {project.tags.map((tag) => (
+                                <Badge key={tag} variant="secondary">
+                                  {tag}
+                                </Badge>
+                              ))}
+                            </div>
+                            <p className="text-foreground/90 whitespace-pre-line">
+                              {project.description}
+                            </p>
+                            <div className="flex gap-4 mt-6">
+                              <Button asChild>
+                                <Link
+                                  href={project.liveUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  <ExternalLink className="mr-2 h-4 w-4" /> View
+                                  Demo
+                                </Link>
+                              </Button>
+                              <Button variant="outline" asChild>
+                                <Link
+                                  href={project.githubUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  <Github className="mr-2 h-4 w-4" /> View Code
+                                </Link>
+                              </Button>
+                            </div>
+                          </DialogDescription>
+                        </DialogHeader>
+                      </DialogContent>
+                    </Dialog>
+                    <div className="flex gap-2">
+                      <Button variant="outline" size="icon" asChild>
+                        <Link
+                          href={project.githubUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label="View code on GitHub"
+                        >
+                          <Github className="h-4 w-4" />
+                        </Link>
+                      </Button>
+                      <Button size="icon" asChild>
+                        <Link
+                          href={project.liveUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label="View live demo"
+                        >
+                          <ExternalLink className="h-4 w-4" />
+                        </Link>
+                      </Button>
+                    </div>
                   </CardFooter>
                 </Card>
               ))}
