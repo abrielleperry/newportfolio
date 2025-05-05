@@ -52,8 +52,7 @@ export default function Resume() {
                   </div>
                   <ul className="mt-4 space-y-2 text-sm text-muted-foreground list-disc pl-5">
                     <li>
-                      GPA: 3.8/4.0 | Honor Roll for excellence in Front-End and
-                      Back-End Development
+                      Honor Roll for excellence in Front-End, Back-End, and Full Stack Development Trimesters
                     </li>
                     <li>
                       Completed a 20-month, 74.5-credit intensive program
