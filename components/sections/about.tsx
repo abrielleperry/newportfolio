@@ -144,7 +144,7 @@ export default function About() {
                   </div>
                   <Button asChild>
                     <Link
-                      href="/resume.pdf"
+                      href="/Abrielle_Perry_Resume.pdf"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -159,7 +159,7 @@ export default function About() {
           <div className="order-1 md:order-2 flex justify-center">
             <div className="w-64 h-96 sm:w-80 sm:h-[450px]">
               <TiltedCard
-                imageSrc="/about-headshot.png"
+                imageSrc="/about-headshot.webp"
                 altText="Your Name - Professional Headshot"
                 captionText="Abrielle Perry"
                 containerHeight="100%"

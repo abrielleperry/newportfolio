@@ -1,15 +1,32 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { Suspense, useState, useEffect, useRef } from "react";
-import { Canvas } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
 import { Button } from "@/components/ui/button";
 import { ArrowDown, Github, Linkedin } from "lucide-react";
 import Link from "next/link";
-import Model3D from "@/components/3d/model";
 import RotatingText from "@/components/rotating-text";
 import SectionVantaBackground from "@/components/section-vanta-background";
 import { useMobile } from "@/hooks/use-mobile";
+
+// 💡 Dynamically import Canvas-related code only on client side
+const Canvas = dynamic(
+  () => import("@react-three/fiber").then((mod) => mod.Canvas),
+  {
+    ssr: false,
+  }
+);
+
+const OrbitControls = dynamic(
+  () => import("@react-three/drei").then((mod) => mod.OrbitControls),
+  {
+    ssr: false,
+  }
+);
+
+const Model3D = dynamic(() => import("@/components/3d/model"), {
+  ssr: false,
+});
 
 export default function Hero() {
   const [mounted, setMounted] = useState(false);
@@ -206,9 +223,9 @@ export default function Hero() {
               <span>Developer</span>
             </h2>
             <p className="text-lg mb-8 text-muted-foreground">
-              Recent graduate passionate about building beautiful, functional,
-              and user-friendly web applications. Seeking opportunities to grow
-              and contribute to innovative projects.
+              With a detail-oriented approach, a focus on the end user, and
+              alignment with business goals, I aim to contribute to project
+              success and drive measurable results.{" "}
             </p>
 
             <div className="flex flex-wrap gap-4 relative z-30 pointer-events-auto">

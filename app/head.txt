@@ -1,0 +1,45 @@
+// app/head.tsx
+export default function Head() {
+  return (
+    <>
+      <title>Abrielle Perry | Full Stack Web & Mobile Developer</title>
+      <meta
+        name="description"
+        content="Portfolio of Abrielle Perry, a full stack developer specializing in front-end, back-end, and mobile development. Focused on building accessible, user-friendly websites and applications that meet business goals and enhance user experience."
+      />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+      {/* Open Graph */}
+      <meta
+        property="og:title"
+        content="Abrielle Perry | Full Stack Developer"
+      />
+      <meta
+        property="og:description"
+        content="Explore Abrielle Perry's portfolio of web and mobile development work, showcasing a blend of technical and creative expertise with modern frameworks like React, TypeScript, and Tailwind CSS."
+      />
+      <meta property="og:image" content="/og-image.png" />
+      <meta property="og:image:type" content="image/png" />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
+      <meta property="og:url" content="https://abrielleperry.com" />
+      <meta property="og:type" content="website" />
+      <meta property="og:site_name" content="Abrielle Perry Portfolio" />
+
+      {/* Twitter */}
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta
+        name="twitter:title"
+        content="Abrielle Perry | Full Stack Developer"
+      />
+      <meta
+        name="twitter:description"
+        content="Discover full stack, front-end, and mobile projects by Abrielle Perry, built with a focus on accessibility, usability, and modern design."
+      />
+      <meta
+        name="twitter:image"
+        content="https://abrielleperry.com/og-image.png"
+      />
+    </>
+  );
+}

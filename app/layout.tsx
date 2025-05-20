@@ -9,9 +9,33 @@ import { aileron, cursive } from "./fonts";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Abrielle Perry | Fullstack Developer",
+  metadataBase: new URL("https://abrielleperry.com"),
+  title: "Abrielle Perry | Full Stack Web & Mobile Developer",
   description:
-    "Personal portfolio website showcasing my projects and skills as a fullstack developer",
+    "Portfolio of Abrielle Perry, a full stack developer specializing in front-end, back-end, and mobile development. Focused on building accessible, user-friendly websites and applications that meet business goals and enhance user experience.",
+  openGraph: {
+    title: "Abrielle Perry | Full Stack Developer",
+    description:
+      "Explore Abrielle Perry's portfolio of web and mobile development work, showcasing a blend of technical and creative expertise with modern frameworks like React, TypeScript, and Tailwind CSS.",
+    url: "https://abrielleperry.com",
+    siteName: "Abrielle Perry Portfolio",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        type: "image/png",
+      },
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Abrielle Perry | Full Stack Developer",
+    description:
+      "Discover full stack, front-end, and mobile projects by Abrielle Perry, built with a focus on accessibility, usability, and modern design.",
+    images: ["https://abrielleperry.com/og-image.png"],
+  },
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },
@@ -25,13 +49,13 @@ export const metadata = {
         type: "image/png",
       },
     ],
-    other: [
-      {
-        rel: "manifest",
-        url: "/site.webmanifest",
-      },
-    ],
+    other: [{ rel: "manifest", url: "/site.webmanifest" }],
   },
+};
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({

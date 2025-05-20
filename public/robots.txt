@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://abrielleperry.com
+
+# Sitemaps
+Sitemap: https://abrielleperry.com/sitemap.xml

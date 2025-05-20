@@ -9,13 +9,13 @@ import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 
 const navLinks = [
-  { name: "Home", href: "#home" },
-  { name: "About", href: "#about" },
-  { name: "Services", href: "#services" },
-  { name: "Projects", href: "#projects" },
-  { name: "Skills", href: "#skills" },
-  { name: "Resume", href: "#resume" },
-  { name: "Contact", href: "#contact" },
+  { name: "Home", sectionId: "home", route: "/hero" },
+  { name: "About", sectionId: "about", route: "/about" },
+  { name: "Services", sectionId: "services", route: "/services" },
+  { name: "Projects", sectionId: "projects", route: "/projects" },
+  { name: "Skills", sectionId: "skills", route: "/skills" },
+  { name: "Resume", sectionId: "resume", route: "/resume" },
+  { name: "Contact", sectionId: "contact", route: "/contact" },
 ];
 
 export default function Navbar() {
@@ -47,7 +47,7 @@ export default function Navbar() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <div className="flex-shrink-0">
-            <Link href="#home" className="text-xl font-bold">
+            <Link href="/#home" className="text-xl font-bold">
               <span className="text-primary">A</span>Portfolio
             </Link>
           </div>
@@ -57,7 +57,7 @@ export default function Navbar() {
             {navLinks.map((link) => (
               <Link
                 key={link.name}
-                href={link.href}
+                href={`/#${link.sectionId}`}
                 className="px-3 py-2 text-sm font-medium rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
               >
                 {link.name}
@@ -99,7 +99,7 @@ export default function Navbar() {
             {navLinks.map((link) => (
               <Link
                 key={link.name}
-                href={link.href}
+                href={`/#${link.sectionId}`}
                 className="px-4 py-3 text-lg font-medium rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
                 onClick={toggleMenu}
               >
@@ -109,7 +109,7 @@ export default function Navbar() {
           </nav>
           <div className="mt-auto">
             <Button className="w-full" asChild>
-              <Link href="#contact" onClick={toggleMenu}>
+              <Link href="/#contact" onClick={toggleMenu}>
                 Get In Touch
               </Link>
             </Button>
