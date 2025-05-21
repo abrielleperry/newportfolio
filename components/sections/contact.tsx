@@ -1,7 +1,6 @@
 "use client";
 
 import type React from "react";
-
 import { useState } from "react";
 import {
   Card,
@@ -17,8 +16,9 @@ import { useToast } from "@/hooks/use-toast";
 import { Mail, MapPin, Phone, Send } from "lucide-react";
 import SectionHeading from "@/components/section-heading";
 import SectionVantaBackground from "@/components/section-vanta-background";
+import { sendEmail } from "@/app/actions/email";
 
-export default function Contact() {
+const Contact = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -26,20 +26,50 @@ export default function Contact() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate form submission
-    setTimeout(() => {
+    // Store a reference to the form
+    const form = e.currentTarget;
+
+    // Get form data
+    const formData = new FormData(form);
+
+    try {
+      // Call the server action to send the email
+      const result = await sendEmail(formData);
+
+      console.log("Email result:", result); // Add this for debugging
+
+      if (result.success) {
+        // Show success toast if email was sent successfully
+        toast({
+          title: "Message sent!",
+          description: "Thank you for your message. I'll get back to you soon.",
+        });
+        // Reset the form
+        form.reset();
+      } else {
+        // Show error toast if email sending failed
+        toast({
+          title: "Error",
+          description:
+            result.message || "Failed to send message. Please try again.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Form submission error:", error);
+      // Show error toast if there was an exception
       toast({
-        title: "Message sent!",
-        description: "Thank you for your message. I'll get back to you soon.",
+        title: "Error",
+        description: "Something went wrong. Please try again later.",
+        variant: "destructive",
       });
+    } finally {
       setIsSubmitting(false);
-      // Reset form
-      e.currentTarget.reset();
-    }, 1500);
+    }
   };
 
   return (
-    <section id="contact" className="py-20  relative">
+    <section id="contact" className="py-20 relative">
       {/* Add Vanta background to contact section */}
       <SectionVantaBackground />
 
@@ -62,7 +92,12 @@ export default function Contact() {
                     <label htmlFor="name" className="text-sm font-medium">
                       Name
                     </label>
-                    <Input id="name" placeholder="Your name" required />
+                    <Input
+                      id="name"
+                      name="name"
+                      placeholder="Your name"
+                      required
+                    />
                   </div>
                   <div className="space-y-2">
                     <label htmlFor="email" className="text-sm font-medium">
@@ -70,6 +105,7 @@ export default function Contact() {
                     </label>
                     <Input
                       id="email"
+                      name="email"
                       type="email"
                       placeholder="Your email"
                       required
@@ -82,6 +118,7 @@ export default function Contact() {
                   </label>
                   <Input
                     id="subject"
+                    name="subject"
                     placeholder="Subject of your message"
                     required
                   />
@@ -92,6 +129,7 @@ export default function Contact() {
                   </label>
                   <Textarea
                     id="message"
+                    name="message"
                     placeholder="Your message"
                     rows={5}
                     required
@@ -189,4 +227,6 @@ export default function Contact() {
       </div>
     </section>
   );
-}
+};
+
+export default Contact;
